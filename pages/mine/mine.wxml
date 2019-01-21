@@ -1,0 +1,48 @@
+
+<view class="bai1">
+  <view class="my-top">
+    <view class="my-info">
+      <view class="my-photo">
+         <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+          <block wx:else>
+            <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+            <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+          </block>
+      </view>    
+    </view>
+    <view class="guanBox">
+      <view class="guan" bindtap='tomyNews'>
+        <view class="num">5</view>
+        <text>关注</text>
+      </view>
+      <view class="line">|</view>
+      <view class="guan">
+        <view class="num">12</view>
+        <text>收藏</text>
+      </view>
+      <view class="line">|</view>
+      <view class="guan">
+        <view class="num">32</view>
+        <text>历史</text>
+      </view>  
+    </view>
+  </view>
+  <view class="list">
+     <navigator url="../er/er" class="tiao">
+        <view class="zi">我赞过的</view>
+        <view class="aff"></view>
+     </navigator>
+     <navigator url="../er/er" class="tiao">
+        <view class="zi">我评论过的</view>
+        <view class="aff"></view>
+     </navigator>
+      <navigator url="../er/er" class="tiao">
+        <view class="zi">我参与的活动</view>
+        <view class="aff"></view>
+     </navigator>
+      <navigator url="../er/er" class="tiao last">
+        <view class="zi">管理收获地址</view>
+        <view class="aff"></view>
+     </navigator>
+  </view>
+</view>

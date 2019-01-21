@@ -1,0 +1,44 @@
+<import src="/component/tab/index.wxml" />
+<import src="/component/userinfo/index.wxml" />
+<view class="stationList">
+  <!-- <view class='headTab'> -->
+    <template
+      is="zan-tab"
+      data="{{ ...tab1, componentId: 'tab1' }}">
+    </template>
+  <!-- </view> -->
+  <scroll-view scroll-y wx:if="{{show == 'a'}}" style='height: 91vh' upper-threshold='10' class="ripple fadeIn">
+    <view wx:for="{{stationList}}" wx:key="*this" wx:for-index="idx" wx:for-item="items">
+      <view class='stationTitle'>{{items.Organization}}</view>
+      <view class='stationWraper'>
+        <view class='station' wx:for="{{items.List}}" wx:key="*this" bindtap='toStation' data-id='{{item.ChannelId}}'>
+          <view class='cover'>
+            <image class='img' mode='aspectFill' lazy-load src='{{item.CoverImage}}'></image>
+          </view>
+          <text class='stationName text2over'>{{item.Name}}</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <scroll-view wx:elif="{{show == 'b'}}" scroll-y style='height: 91vh' upper-threshold='10' class="ripple fadeIn">
+    <view class='stationWraper'>
+      <view class='station'  wx:for="{{stationList}}" wx:key="ChannelId" bindtap='toStation' data-id='{{item.ChannelId}}'>
+        <view class='cover'>
+          <image class='img' mode='aspectFill' lazy-load src='{{item.CoverImage}}'></image>
+        </view>
+        <text class='stationName text2over'>{{item.Name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+  <scroll-view wx:elif="{{show == 'c'}}" scroll-y class="ripple slideInDown" style='height: 91vh' upper-threshold='10'>
+    <view class='stationWraper'>
+      <view class='provinces'  wx:for="{{stationList}}" wx:key="OrganizationId">
+        <view class='provincesBorder' bindtap='checkProvince' data-id='{{item.OrganizationId}}' data-name='{{item.Name}}'>
+        {{item.Name}}
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+</view>
+<template is="zan-userinfo" data="{{ zanUserInfo }}"></template>

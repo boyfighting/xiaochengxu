@@ -1,0 +1,10 @@
+<template name="zan-userinfo">
+  <button
+    wx:if="{{ zanUserInfo }}"
+    bindtap="clearZanUserInfo"
+    style='border: none; position: absolute; width: 100vw; height: 100vh;background-color: transparent;z-index: 200;top: 0'
+    open-type='getUserInfo'
+    plain
+    bindgetuserinfo="_resultUserInfo" >
+  </button>
+</template>

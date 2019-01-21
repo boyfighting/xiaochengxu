@@ -1,0 +1,67 @@
+<view class="audioComment">
+  <view class="audioTotalComment">评论({{childCommentList.length}})</view>
+  <view class="confirm" >
+    <view  class="confirm-content" wx:for="{{childCommentList}}" wx:key="{{index}}" >
+      <view style="padding: 0 30rpx;">
+        <view class="confirm-list" >
+          <view style="display: flex" bindtap='deleteReplayComment' data-user="{{item}}">
+            <view class="confirm-from">
+              <image src="{{item.avatar}}" class="user"></image>
+            </view>
+            <view class="confirm-detail">
+              <view class="conform-head" style="">
+                <view class="name">{{item.nick}}</view>
+              </view>
+              <view class="confirm-time">{{item.CommentTime}}</view>
+            </view>
+          </view>
+          <view>
+            <view style="display: flex;margin-top: 10rpx;" wx:if="{{item.isLiked === true}}"  data-item="{{item}}" bindtap='toggleCommentLike' >
+              <image  style=" width: 34rpx;height: 38rpx;margin-right: 10rpx;" src="../../images/like_down.png "></image>
+              <view style="color: #898989;font-size: 28rpx;">{{item.LikeCount <= 0 ? '' : item.LikeCount}}</view>
+            </view>
+            <view style="display: flex;margin-top: 10rpx;"  wx:if="{{item.isLiked === false}}" data-item="{{item}}" bindtap='toggleCommentLike' >
+              <image style="height: 38rpx; width: 34rpx;margin-right: 10rpx;" src="../../images/like_normal.png"></image>
+              <view style="color: #898989;font-size: 28rpx;">{{item.LikeCount}}</view>
+            </view>
+          </view>
+           
+        </view>
+        <view class="confirm-comment"  >
+          <view bindtap='deleteReplayComment' data-user="{{item}}">{{item.Content}}</view>
+          <view  class="othersComment" wx:if="{{item.Childs.length !== 0}}">
+            
+            <view  wx:for="{{item.Childs}}" wx:for-item="items" wx:key="{{i}}" style="padding: 4rpx 0;">
+              <view bindtap='deleteReplayComment' data-user="{{items}}" >
+                 <view wx:if="{{items.ParentId == item.CommentId }}">
+                  <text style="color: #1296db;">{{items.nick}}</text>
+                  <text >：{{items.Content}}</text>
+                </view> 
+                <view wx:else>
+                  <text style="color: #1296db;">{{items.Nick}}</text><text>回复</text><text style="color: #1296db;">{{items.ToNick}}</text>
+                  <text >：{{items.Content}}</text>
+                </view>
+                
+                
+                
+              </view>
+            </view>
+            <view bindtap='moreComment' wx:if="{{item.Childs.length >= 5 }}" style="text-align: center;font-size: 24rpx;color: #898989;">最多只显示五条，点击查看跟多</view>
+          </view> 
+        </view>
+      </view>
+    </view>
+    
+  </view>
+
+</view>
+  <view class="publishComment"  >
+    <view class="program-comment">
+      <image class="mc" src="../../images/mic_bottom.png" bindtap='record'></image>
+      <input placeholder="说点什么吧" value="{{currcomment}}" type="text" name="comment" confirm-type="send"  bindconfirm='bindFormSubmit' cursor-spacing='24' />
+    </view>
+      
+    <view class="sendPic">
+      <image mode="" src="../../images/pic .png"  bindtap='selectPic'></image>
+    </view>
+  </view>

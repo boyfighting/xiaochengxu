@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/stations/station",
+    "pages/playBack/playBack",
+    "pages/logs/logs",
+    "pages/mine/mine",
+    "pages/goods/goods",
+    "pages/station/index",
+    "pages/trendsDetail/trendsDetail",
+    "pages/playDetail/playDetail",
+    "pages/playMusic/index",
+    "pages/wxDetail/index",
+    "pages/moreComment/moreComment"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black",
+    "onReachBottomDistance": "20px"
+  }
+}

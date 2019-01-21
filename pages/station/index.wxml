@@ -1,0 +1,233 @@
+<!--pages/trends/trends.wxml-->
+<import src="/component/loadmore/index.wxml" />
+<!-- 歌曲 -->
+<view>
+<view class="swiper-tab">
+    <view class="swiper-tab-item {{currentTab== '0'?'active':''}}" data-current="0" bindtap="clickTab">节目回放</view>
+    <view class="swiper-tab-item {{currentTab== '1'?'active':''}}" data-current="1" bindtap="clickTab">动态</view>
+</view>
+
+<swiper current="{{currentTab}}" duration="300" bindchange="swiperTab">
+  <swiper-item >
+    <scroll-view style='height: 91vh' scroll-y bindscrolltolower="playBackReachBottom">
+    <!-- ============= 回放页面 start============  -->
+      <view>
+        <block>
+          <view class="playList">
+            <view class="slider" wx:for="{{songs}}"  wx:key="{{index}}">
+              <!-- 无图 -->
+              <view class='PublishTime'>{{item.TimeRange}}</view>
+              <view  class="noPhoto" wx:if="{{item.FileType == 0 && item.Images.length == 0}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+                
+                <view>
+                  <view class="newsTitle">{{item.Title}}</view>
+                  <view class="newsInfo twentyfour">
+                    <text class="newsFrom">{{item.startAndEnd}}</text>
+                    <text class="newsPubTime">{{item.FolderName}}</text>
+                  </view>
+                </view>
+              </view> 
+
+              <!-- 一张图 -->
+              
+              <view class="onePhoto" wx:elif="{{item.FileType == 0 && item.Images.length == 1}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+                <view wx:for="{{item.Images}}" wx:for-item="items" wx:key="{{i}}">
+                  <image src="{{items}}" mode='' class="onePhotoPic"></image>
+                </view>
+                <view class="onePhotoLeft">
+                  <view class="onePhotoTitle">{{item.Title}}</view>
+                    <view class="onePhotoInfo twentyfour">
+                      <text class="onePhotoFrom">{{item.startAndEnd}}</text>
+                      <text class="onePhotoTime">{{item.FolderName}}</text>
+                    </view>
+                </view>
+              </view>   
+
+              <!-- 两张图 -->
+
+              <view class="twoPhoto" wx:elif="{{item.FileType == 0 && item.Images.length == 2}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+                <view class="twoPhotoTitle">{{item.Title}} </view>
+                <view class="twoPhotoPic" wx:for="{{item.Images}}" wx:for-item="items" wx:key = "{{i}}" >
+                  <image src="{{items}}"></image>
+                </view>
+                <view class="twoPhotoInfo twentyfour">
+                  <text class="twoPhotoFrom">{{item.startAndEnd}}</text>
+                  <text class="twoPhotoTime">{{item.FolderName}}</text>
+                </view>
+              </view>  
+
+              <!-- 三张图 -->
+
+              <view class="threePhoto" wx:elif="{{item.FileType == 0 && item.Images.length == 3}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+                <view class="twoPhotoTitle">{{item.Title}} </view>
+                <view class="threePhotoPic" wx:for="{{item.Images}}" wx:for-item="items" wx:key = "{{i}}">
+                  <image src="{{items}}"></image>
+                </view>
+                <view class="twoPhotoInfo twentyfour">
+                  <text class="twoPhotoFrom">{{item.startAndEnd}}</text>
+                  <text class="twoPhotoTime">{{item.FolderName}}</text>
+                </view>
+              </view> 
+
+              <!-- 视频 -->
+
+              <view class="indexvideo" bindtap='' wx:elif="{{item.FileType == 4}}" data-index="{{item}}" bindtap='clicAudiokDetail'>
+                <view class="indexvideoTitle">{{item.Title}}</view>
+                <view class="indexvideoPic" style="position: relative">
+                  <image  src="{{item.CoverImage}}" mode='aspectFill' style="width:100%;height: 360rpx"></image>
+                  <view class="playvideoIcon">
+                    <image src="../../images/play_vedio.png"  mode="aspectFit"></image>
+                  </view>
+                </view>
+                <view class="indexvideoInfo">
+                  <text class="indexvideoFrom">{{item.FolderName}}</text>
+                  <text class="indexvideoTime">{{item.TimeRange}}</text>
+                </view>
+                </view>
+              </view>
+          </view>
+        </block>
+  
+        <template is="zan-loadmore" wx:if="{{!playNoData}}" data="{{ loading: true }}" />
+        <template is="zan-loadmore" wx:else data="{{ nodata: true }}" />
+      </view>
+      <!-- =============回放页面 end============  -->
+    </scroll-view>
+  </swiper-item>
+  <swiper-item>
+    <scroll-view style='height: 91vh' scroll-y bindscrolltolower="trendsReachBottom">
+      <view class='TrendsWraper'>
+        <view class="Trends" wx:for="{{pageData}}" wx:key="id">
+          <view class="trendsFrom">
+            <view class="user">
+              <view>
+                <image class="userPic" src="{{item.ownerAvatar || '../../images/user_default.png'}}"></image>
+              </view>
+              <view class="user-info">
+                <view class="uesername">{{item.ownerNickname}}</view>
+                <text class="trendsPubTime">{{item.publishedAt}}</text>
+                <block>
+                  <text class="trendsOprate" wx:if="{{item.type === 'video'}}">发布了视频</text> 
+                  <text class="trendsOprate" wx:elif="{{item.type === 'song'}}">发布了歌曲</text>
+                  <text class="trendsOprate" wx:elif="{{item.type === 'audio'}}">发布了音频</text>
+                  <text class="trendsOprate" wx:elif="{{item.type === 'vote'}}">发布了投票</text>
+                  <text class="trendsOprate" wx:elif="{{item.type === 'image'}}">发布了图片</text>
+                  <text class="trendsOprate" wx:elif="{{item.type === 'topic'}}">发布了话题 {{item.source === 'weibo' ?'【来自微博】' : ''}} {{item.source === 'weixin' ? '【来自微信】' : ''}}</text> 
+                  <text class="trendsOprate" wx:elif="{{item.type === 'traffic'}}">发布了路况</text>
+                </block>
+              </view>
+            </view>
+            <!-- <view bindtap='TogglefollowMe' class="followed" wx:if="{{alreadyFollow}}">已关注</view>
+            <view bindtap='ToTrendsDetail' data-type='{{item.urlType}}' data-itemid="{{item.id}}" data-urlSubType="{{item.urlSubType}}" class="follow" wx:else>关注</view>  -->
+          </view>
+
+          <view class="trendsItem" wx:if="{{item.type === 'song'}}" data-types='{{item.type}}' data-itemid="{{item.id}}"  bindtap='ToTrendsDetail' data-songid="{{item.originalId}}">
+            <view class='songWraper'>
+              <view class="songImageWraper">
+                <image mode='aspectFit' src="{{item.data.imageUrl || '../../images/music_icon.png'}}"></image>
+              </view>
+              <view class='songInfo'>
+                <view>{{item.data.title}}</view>
+                <view class='songInfoTime'>歌手：{{item.data.artist}}  {{item.duration || ''}}</view>
+              </view>
+            </view>
+          </view>
+          <view class="trendsItem" wx:if="{{item.type === 'audio'}}" data-types='{{item.type}}' data-itemid="{{item.id}}"  bindtap='ToTrendsDetail'>
+            <view class='songWraper'>
+              <view class="songImageWraper">
+                <image mode='aspectFit' src='../../images/music_icon.png'></image>
+              </view>
+              <view class='songInfo'>
+                <view>{{item.data.title}}</view>
+              </view>
+            </view>
+          </view>
+          <view class="trendsItem" wx:if="{{item.type === 'vote'}}" data-types='{{item.type}}' data-itemid="{{item.id}}">
+            <view class='trendsLogoHead'>
+              <image class='headlogo' src='../../images/vote.png'></image>
+              <text class='fontBold'>{{item.data.title}}</text>
+            </view>
+            <view class='voteWraper'>
+              <block>
+                <radio-group wx:if='{{item.canVote}}' class="radio-group" bindchange="radioChange" data-msgid='{{item.id}}'>
+                  <radio color='#ff9500' class="radio" wx:for="{{item.data.items}}" wx:key="*this" wx:for-index="idx" wx:for-item="itemName" value="{{itemName.voteItemId}}" checked="{{itemName.checked}}">
+                      <text style='margin-left: 6px'>{{itemName.content}}</text>
+                  </radio>
+                </radio-group>
+                <view wx:else>
+                  <view wx:for="{{item.data.items}}" wx:for-index="idxvote" wx:key="*this" wx:for-item="itemvote" >
+                    <view class='voteTitle'>{{itemvote.content}} [{{itemvote.count}}]票</view>
+                    <progress percent="{{itemvote.percent}}" activeColor='#ff9500' show-info backgroundColor='gray' />
+                  </view>
+                </view>
+              </block>
+              <view class="{{item.canVote ? 'voteBtn' : 'notVoteBtn'}}" data-canvote='{{item.canVote}}' bindtap='vote' data-msgid='{{item.id}}'>{{item.voteMsg}}</view>
+            </view>
+          </view>
+          <view class="trendsItem" wx:elif="{{item.type === 'traffic'}}" data-types='{{item.type}}' data-itemid="{{item.id}}" bindtap='ToTrendsDetail' >
+            <view class="trendsDesc">{{item.data.content}}</view>
+            <view class="picture">
+              <image mode='aspectFit' src="{{item.data.mapImageUrl}}"></image>
+            </view>
+          </view>
+          <view class="trendsItem" wx:elif="{{item.type === 'image'}}" data-types='{{item.type}}'data-itemid="{{item.id}}"bindtap='ToTrendsDetail' >
+            <view class="trendsDesc">{{item.data.title}}</view>
+            <view class="picture">
+              <image mode='aspectFit' src="{{item.data.url}}"></image>
+            </view>
+          </view>
+          <view class="trendsItem" wx:elif="{{item.type === 'activity'}}" data-types='{{item.type}}'  data-itemid="{{item.id}}" bindtap='ToTrendsDetail' >
+            <view class="trendsDesc">{{item.name || item.desc}}</view>
+            <view class="picture">
+              <image mode='aspectFit' src="{{item.image}}"></image>
+            </view>
+          </view>
+          <view class="trendsItem" wx:elif="{{item.type === 'topic'}}" data-types='{{item.type}}'data-itemid="{{item.id}}" bindtap='ToTrendsDetail' data-source='{{item.source}}' data-web="{{item.data.weburl}}">
+            <view class='trendsLogoHead'>
+              <image class='headlogo' src='../../images/topic.png'></image>
+              <text class='fontBold'>{{item.data.title || item.data.content || ''}}</text>
+            </view>
+            <view wx:if="{{item.data.title}}" class='trendsText'>{{item.data.content}}</view>
+            <block wx:if="{{item.data.images.length > 0}}">
+              <view>
+                <image wx:for="{{item.data.images}}" wx:for-index="idximg" wx:key="*this" wx:for-item="itemimg" src='{{itemimg}}' class="{{'topicImg' + item.data.images.length}}" mode='aspectFill'></image>
+              </view>
+            </block>
+          </view>
+          <view class="trendsItem" wx:elif="{{item.type === 'video'}}" data-types='{{item.type}}'data-itemid="{{item.id}}" bindtap='ToTrendsDetail' >
+            <view class="trendsDesc">{{item.data.title}}</view>
+            <view class="picture">
+              <image mode='aspectFit' src="{{item.data.imageUrl}}"></image>
+              <view class='playIcon'></view>
+            </view>
+          </view>
+          
+          <view class="oprate">
+            <view bindtap='ToggleZan' data-item="{{item}}" wx:if="{{item.isFavorited}}">
+              <image mode='aspectFit' class='zanIcon' src="../../images/zan2.png"></image>
+              {{item.favoritedCount}}
+            </view>
+            <view bindtap='ToggleZan' data-item="{{item}}" wx:else>
+              <image mode='aspectFit' class='zanIcon' src="../../images/zan.png"></image>
+              {{item.favoritedCount == '0' ? '赞' : item.favoritedCount}}
+            </view>
+            <view bindtap='ToTrendsDetail' data-types='{{item.type}}' data-urlType='{{item.urlType}}' data-urlSubType="{{item.urlSubType}}" data-itemid="{{item.id}}">
+              <image mode='aspectFit' class='commentIcon' src="../../images/comment.png"></image>
+              {{item.commentCount == '0' ? '评论' : item.commentCount}}
+            </view>
+            <view>
+              <button plain style='border-color: white; color: gray' open-type="share" class='sharBtn' data-messageid="{{item.id}}" data-image="{{item.data.url}}" data-url="{{item.data.imageUrl}}"  data-types='{{item.type}}' data-source='{{item.source}}' data-songid="{{item.originalId}}" data-web="{{item.data.weburl}}">
+                <image mode='aspectFit' class='shareIcon' src="../../images/share.png"></image>
+                {{item.visitTimes == '0' ? '分享' : item.visitTimes}}
+              </button>
+            </view>
+          </view>
+        </view>
+      </view>
+      <template is="zan-loadmore" wx:if="{{!noData}}" data="{{ loading: true }}" />
+      <template is="zan-loadmore" wx:else data="{{ nodata: true }}" />
+    </scroll-view>
+  </swiper-item>
+</swiper>
+
+</view>

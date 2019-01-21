@@ -1,0 +1,16 @@
+<template name="threePicture">
+  <view class="threePhoto">
+    <view class="twoPhotoTitle">春运开始，出京高速开启拥堵模式 </view>
+    <view class="threePhotoPic">
+      <image src="../../images/1.png"></image>
+      <image src="../../images/1.png"></image>
+      <image src="../../images/1.png"></image>
+    </view>
+    <view class="twoPhotoInfo">
+      <text class="twoPhotoFrom">一路畅通</text>
+      <text class="twoPhotoTime">一小时前</text>
+    </view>
+
+  </view>
+
+</template>

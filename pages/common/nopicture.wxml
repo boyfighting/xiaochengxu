@@ -1,0 +1,16 @@
+<!-- 没图片 -->
+
+ <!-- <template name="nopicture">
+  <view  class="noPhoto"  >
+    <image src="" class="newsPic" mode="{{aspectFill}}"></image>
+    <view>
+      <view class="newsTitle">{{itemclass.Title}}</view>
+      <view class="newsInfo">
+        <text class="newsFrom">{{channelName}}</text>
+        <text class="newsPubTime">{{itemclass.TimeRange}}</text>
+      </view>
+    </view>
+    
+    
+  </view>
+</template>  -->

@@ -1,0 +1,12 @@
+<template name="onePicture">
+  <view class="onePhoto">
+    <view class="onePhotoLeft">
+      <view class="onePhotoTitle">春节后返京潮，入京高速全面拥堵</view>
+        <view class="onePhotoInfo">
+          <text class="onePhotoFrom">一路畅通</text>
+          <text class="onePhotoTime">一小时前</text>
+        </view>
+    </view>
+    <image src="../../images/1.png" class="onePhotoPic"></image>
+  </view>
+</template>  

@@ -1,0 +1,3 @@
+<view wx:if="{{url}}" class='topic-wx'>
+  <web-view src="{{url}}"></web-view>
+</view>

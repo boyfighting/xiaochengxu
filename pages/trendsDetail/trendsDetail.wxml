@@ -1,0 +1,147 @@
+<view class="TrendsDetail">
+  <view class="trendsFrom">
+    <view class="user">
+      <view>
+        <image class="userPic" binderror='imageError' src="{{programData.ownerAvatar || '../../images/user_default.png'}}"></image>
+      </view>
+      <view class="user-info">
+        <view class="uesername">{{programData.ownerNickname}}</view>
+        <text class="trendsPubTime">{{programData.publishedAt}}</text>
+        <block>
+          <text style='color: #EF6E35' class="trendsOprate" wx:if="{{programData.type === 'video'}}">发布了视频</text>
+          <text style='color: #EF6E35' class="trendsOprate" wx:elif="{{programData.type === 'audio'}}">发布了音频</text>
+          <text style='color: #EF6E35' class="trendsOprate" wx:elif="{{programData.type === 'image'}}">发布了图片</text>
+          <text style='color: #EF6E35' class="trendsOprate" wx:elif="{{programData.type === 'traffic'}}">发布了路况</text>
+          <text style='color: #EF6E35' class="trendsOprate" wx:elif="{{programData.type === 'topic'}}">发布了话题 {{programData.source === 'weibo' ?'【来自微博】' : ''}} {{programData.source === 'weixin' ? '【来自微信】' : ''}}</text>
+          <text style='color: #EF6E35' class="trendsOprate" wx:elif="{{programData.type === 'vote'}}">创建了投票</text>
+        </block>
+      </view>
+    </view>
+     <!-- <view bindtap='TogglefollowMe' class="{{alreadyFollow ? 'followed' : 'follow'}}">{{alreadyFollow ? '已关注' : '关注'}}</view> -->
+  </view>
+  <view class="trendsItem" wx:if="{{programData.type === 'image'}}">
+    <view class="trendsDesc">{{programData.data.title || ''}}</view>
+    <view class="picture" bindtap='showimage' data-src="{{programData.data.url}}">
+      <image mode='aspectFit' src="{{programData.data.url}}"></image>
+    </view>
+  </view>
+  <view class="trendsItem" wx:elif="{{programData.type === 'video'}}" >
+    <view class="trendsDesc">{{programData.data.title}}</view>
+    <view class="picture">
+      <video src="{{programData.data.videoUrl}}" poster="{{programData.data.imageUrl}}" controls style='width: 700rpx; height: 394rpx'></video>
+    </view>
+  </view>
+  <view class="trendsItem" wx:elif="{{programData.type === 'audio'}}" >
+    <!-- <view class="trendsDesc">{{programData.desc}}</view> -->
+    <view class="picture">
+      <audio controls src="{{programData.data.audioUrl}}" name="{{programData.data.title || ''}}" author="{{programData.desc || ''}}"></audio>
+    </view>
+  </view>
+   <view class="trendsItem" wx:elif="{{programData.type === 'traffic'}}" >
+    <view class="trendsDesc">{{programData.data.content}}</view>
+      <view class="picture" bindtap='showimage' data-src="{{programData.data.mapImageUrl}}">
+        <image mode='aspectFit' src="{{programData.data.mapImageUrl}}"></image>
+      </view>
+    <!-- <view class="picture">
+       <map id="map" longitude="{{programData.data.longitude}}" latitude="{{programData.data.latitude}}" scale="14" show-location style="width: 100%; height: 300px;"></map>
+    </view> -->
+    <view wx:if="{{programData.data.address}}" class='trendsAdd'>[地点]： {{programData.data.address}}</view>
+  </view> 
+  <view class="trendsItem" wx:elif="{{programData.type === 'topic'}}">
+    <view class='trendsLogoHead'>
+      <image class='headlogo' src='../../images/topic.png'></image>
+      <text class='fontBold'>{{programData.data.title || programData.data.content || ''}}</text>
+    </view>
+    <view wx:if="{{programData.data.title}}" class='trendsText'>{{programData.data.content}}</view>
+    <block wx:if="{{programData.data.images.length > 0}}">
+      <view>
+        <image wx:for="{{programData.data.images}}" wx:for-index="idximg" wx:key="*this" wx:for-item="itemimg" src='{{itemimg}}' class="{{'topicImg' + programData.data.images.length}}" mode='aspectFill' bindtap='showimage' data-src="{{itemimg}}"></image>
+      </view>
+    </block>
+  </view>
+  <!-- <view class="trendsItem" wx:elif="{{programData.type === 'vote'}}" >
+    <view class="voteDesc">{{programData.name}}</view>
+    <view class='voteWraper'>
+      <view wx:for="{{programData.options}}" wx:key="{{index}}">
+        <view bindtap='votIng' class="{{programData.voted || programData.isTimeOut ? 'votedItem' : 'voteItem'}}"  data-vote="{{item}}" data-canvote="{{!programData.voted && !programData.isTimeOut}}">{{index + 1}}. {{item.name}} [{{item.memberCount}}]票</view>
+        <progress percent="{{item.percent}}" show-info backgroundColor='gray' />
+      </view>
+    </view>
+    <view class='trendsTopic'>[截止日期：{{programData.endTime}}]</view>
+  </view> -->
+  <view class="trendsItem" wx:if="{{programData.type === 'vote'}}">
+    <view class='trendsLogoHead'>
+      <image class='headlogo' src='../../images/vote.png'></image>
+      <text class='fontBold'>{{programData.data.title}}</text>
+    </view>
+    <view class='voteWraper'>
+      <block>
+        <radio-group wx:if='{{programData.canVote}}' class="radio-group" bindchange="radioChange" >
+          <radio color='#ff9500' class="radio" wx:for="{{programData.data.items}}" wx:key="*this" wx:for-index="idx" wx:for-item="itemName" value="{{itemName.voteItemId}}" checked="{{itemName.checked}}">
+              <text style='margin-left: 6px'>{{itemName.content}}</text>
+          </radio>
+        </radio-group>
+        <view wx:else>
+          <view wx:for="{{programData.data.items}}" wx:for-index="idxvote" wx:key="*this" wx:for-item="itemvote" >
+            <view class='voteTitle'>{{itemvote.content}} [{{itemvote.count}}]票</view>
+            <progress percent="{{itemvote.percent}}" activeColor='#ff9500' show-info backgroundColor='gray' />
+          </view>
+        </view>
+      </block>
+      <view class="{{programData.canVote ? 'voteBtn' : 'notVoteBtn'}}" data-canvote='{{programData.canVote}}' bindtap='vote' data-msgid='{{programData.id}}'>{{programData.voteMsg}}</view>
+    </view>
+  </view>
+
+  <view class="comments">
+    <view class="commentTitle">评论({{programData.commentCount}})</view>
+    <view class="commentItem" wx:for="{{comment}}" wx:key="{{index}}">
+      <view class="commentWraper">
+        <view class="commentImg">
+          <image src="{{item.owner.avatar || '../../images/user_default.png'}}" binderror='imageError' class="user"></image>
+        </view>
+        <view class="commentUser">
+          <view class="commentName">{{item.owner.nick}}</view>
+          <view class='publicTime'>{{item.pubTime}}</view>
+        </view>
+        <view class='commentZan'>
+          <image class='commentZanImg' bindtap='zanComment' data-comment="{{item}}" src="{{item.isLiked ? '../../images/zan2.png' : '../../images/zan.png'}}"></image>{{item.likeCount > 999 ? '999+' : item.likeCount}}
+        </view>
+      </view>
+      <view class="commentBody" bindtap='tapComment' data-comment="{{item}}">{{item.content}}</view>
+      <view class='replies' bindtap='tapReply' data-reply='{{reply}}' wx:for="{{item.childComments}}" wx:key="id" wx:for-index="idx" wx:for-item="reply">
+        <text class='replyUser'>{{reply.owner.nick}}</text> : 
+        <text class='replyDesc'>{{reply.content}}</text>
+      </view>
+    </view>
+    <block>
+      <button style='border: none; font-size: 30rpx; color: #888' plain bindtap='loadMoreComment' wx:if="{{hasData}}" loading="{{loadIngComment}}">{{loadIngComment ? '加载中' : '展开更多'}}</button>
+      <button style='border: none; font-size: 30rpx; color: #888' wx:else plain>没有更多评论~~</button>
+    </block>
+  </view>
+
+  <view class="oprate">
+    <view bindtap='ToggleLikeMe' data-item='{{programData}}'>
+      <button plain style="color: rgba(0,0,0,0.6); border-color: #fff; background-color: #fff;" class='bottombtn'>
+      <image mode='aspectFit' class='zanIcon' src="{{programData.isFavorited? '../../images/zan2.png':  '../../images/zan.png'}}"></image>
+      </button>
+    </view>
+    <view bindtap="toggleBottomPopup">
+      <button plain style="color: rgba(0,0,0,0.6); border-color: #fff; background-color: #fff;border-left:1px solid #e0e0e0; border-right:1px solid #e0e0e0;border-radius: 0" class='bottombtn'>
+      <image mode='aspectFit' class='commentIcon' src="../../images/comment.png"></image>
+      </button>
+      </view>
+    <view>
+      <button plain style="color: rgba(0,0,0,0.6); background-color: #fff; border-color: #fff;" class='bottombtn' open-type="share">
+      <image mode='aspectFit' class='shareIcon' src="../../images/share.png"></image>
+      </button>
+    </view>
+  </view>
+  <view class="popup-example--bottom zan-popup zan-popup--bottom {{ showBottomPopup ? 'zan-popup--show' : ''}}">
+    <view class="zan-popup__mask" catchtap="toggleBottomPopup"></view>
+    <view class="zan-popup__container">
+      <view class="zan-btns">
+        <input type='text' value='{{searchinput}}' class='sendComment' placeholder-class="inputClass" placeholder="{{replyMsg ? '回复 ' + replyMsg.commentOwnerName + ':' : '发表评论'}}" confirm-type="send" bindconfirm="sendComment" />
+      </view>
+    </view>
+  </view>
+</view>

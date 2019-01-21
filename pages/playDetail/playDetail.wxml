@@ -1,0 +1,217 @@
+<!-- 音频区 -->
+<import src="/component/loadmore/index.wxml" />
+<view class="audioOrVideo" wx:if="{{currentAudio.FileType == 0}}" >
+  <!-- 判断是否有富媒体 -->
+   
+  <view classs="rm" style="overflow: hidden" >
+    <view class="richMedia" wx:if="{{RichMediaCount !== 0 }}" >
+      <image animation="{{richMediaList.animation}}" style="height: 420rpx" src="{{richMediaList.image ? richMediaList.image : '../../images/news.png'}}" mode="aspectFill" ></image>
+      <view class="richMediaTitle"  >{{richMediaList.name ? richMediaList.name : currentAudio.Title}}</view>
+      <view class="richMediaText" >{{richMediaList.text}}</view> 
+    </view>
+  </view>    
+  <view class="noRichMedia">
+    <view class="playIcon" bindtap='audioPlay' style=""  > 
+       <image mode="aspectFit" src="{{playBg}}"></image> 
+    </view>
+    <view class="audioContent" style="width: 56%; padding-left: 20rpx;">
+      <view class="audioTitle" >{{currentAudio.Title}}</view>
+      <view class="author">
+        <view>主持人：</view>
+        <view class="programAnchor">
+          <view class="anchor"  wx:for="{{AnchorList}}" wx:key="{{index}}">
+            <text>{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view style="width: 20%;display: flex;margin-left: 40rpx; ">
+      <view class="audioPassPlaylist"  bindtap='showPassProgram' style="width: 50%;padding-right:28rpx">
+        <image mode="" src="../../images/icon_recoder_menu.png" style="width: 56rpx;height: 42rpx;"></image>
+      </view>
+      <view style="width: 50%;margin-top: -4rpx">
+        <button plain class= "shareBtn " style='border-color: rgba(255,255,255,0);line-height: 0;padding: 0;' open-type='share'>
+          <image mode="" src="../../images/icon_recoder_share.png" style="width: 48rpx;height: 52rpx;"></image>
+        </button>
+      </view>
+    </view>
+  </view>
+  <view class="audioSlider" >
+    <view class="audioTotaltime" style="" >{{newplayInTime}}</view>
+    <slider 
+      bindchange="slider2change" 
+      activeColor="#f58344" 
+      step="1" 
+      min="0" 
+      max="{{totalTime}}" 
+      value="{{playInTime}}" 
+      block-size='27' 
+      block-color="#fff"
+      style="margin: 0;width: 76%"
+      backgroundColor="#e1e1e1"
+      stroke-width='6'
+    />
+    <view style="width: 12%;text-align: center;color: #878787 100%;">{{newtotalTime}}</view>
+  </view>
+</view>
+
+<!-- 视频区 -->
+
+<view class="audioOrVideo" style="background: #f0eff4;" wx:elif="{{currentAudio.FileType == 4}}">
+  <view classs="rm" style="overflow: hidden">
+    <view class="richMedia" style="position: relative;" >
+      <video id="videoCon" src="{{currentAudio.HighBitRateFileUrl}}" controls  style="width: 100%;height: 420rpx;"></video>
+    </view>
+  </view>   
+  <view class="noRichMedia">
+    <view class="audioContent" style="width: 80%; ">
+      <view class="audioTitle" >{{currentAudio.Title}}</view>
+      <view class="author">
+        <view>主持人：</view>
+        <view class="programAnchor">
+          <view class="anchor"  wx:for="{{AnchorList}}" wx:key="{{index}}">
+            <text>{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view style="width: 20%;padding-right: 20rpx;">
+      <view style="">
+        <button plain class= "shareBtn " style='border-color: rgba(255,255,255,0);line-height: 0;padding-right: 0;text-align: right;' open-type='share'>
+          <image mode="" src="../../images/icon_recoder_share.png" style="width: 48rpx;height: 52rpx;"></image>
+        </button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 评论 -->
+
+<view class="audioComment">
+  <view class="audioTotalComment">评论({{commentsList.length}})</view>
+  <view class="confirm" >
+    <view  class="confirm-content" wx:for="{{commentsList}}" wx:key="{{index}}" >
+      <view style="padding: 0 30rpx;">
+        <view class="confirm-list" >
+          <view style="display: flex" bindtap='deleteReplayComment' data-user="{{item}}">
+            <view class="confirm-from">
+              <image src="{{item.avatar ? item.avatar : '../../images/user_default.png'}}" class="user"></image>
+            </view>
+            <view class="confirm-detail">
+              <view class="conform-head" style="">
+                <view class="name">{{item.nick}}</view>
+              </view>
+              <view class="confirm-time">{{item.CommentTime}}</view>
+            </view>
+          </view>
+          <view>
+            <view style="display: flex;margin-top: 10rpx;" wx:if="{{item.isLiked === true}}"  data-item="{{item}}" bindtap='toggleCommentLike'>
+              <image  style=" width: 34rpx;height: 38rpx;margin-right: 10rpx;" src="../../images/like_down.png "></image>
+              <view style="color: #898989;font-size: 28rpx;">{{item.LikeCount <= 0 ? '' : item.LikeCount}}</view>
+            </view>
+            <view style="display: flex;margin-top: 10rpx;"  wx:if="{{item.isLiked === false}}" data-item="{{item}}" bindtap='toggleCommentLike' >
+              <image style="height: 38rpx; width: 34rpx;margin-right: 10rpx;" src="../../images/like_normal.png"></image>
+              <view style="color: #898989;font-size: 28rpx;">{{item.LikeCount}}</view>
+            </view>
+          </view>
+           
+        </view>
+        <view class="confirm-comment">
+          <view bindtap='deleteReplayComment' data-user="{{item}}" wx:if="{{item.MsgType == 'FMTextElem'}}">{{item.Content}}</view>
+          <view bindtap='deleteReplayComment' data-user="{{item}}" wx:elif="{{item.MsgType == 'FMImageElem'}}">
+            <image mode='aspectFit' src="{{item.Content}}" style="width: 690rpx" ></image>
+          </view>
+          <view bindtap='deleteReplayComment' data-user="{{item}}" wx:elif="{{item.MsgType == 'FMVoiceElem'}}">
+            <view catchtap='palyRecord' data-record="{{item}}" class="record-content">
+              <view style="" class="zhezhao"></view>
+              <view style="line-height: 64rpx;margin-left:8rpx; ">{{item.duration ? item.duration : ''}}"</view>
+              <image src="{{recordImage}}" style='height: 32rpx;width: 32rpx;margin-top: 15rpx;'></image>
+              <!-- <image src="../../images/message_voice.gif" style='height: 32rpx;width: 32rpx;margin-top: 15rpx;'></image> -->
+            </view>
+          </view>
+          <view  class="othersComment" wx:if="{{item.Childs.length !== 0}}">
+            <view  wx:for="{{item.Childs}}" wx:for-item="items" wx:key="{{i}}" style="padding: 4rpx 0;">
+              <view bindtap='deleteReplayComment' data-user="{{items}}" >
+                 <view wx:if="{{items.toUserId === ''}}">
+                  <text style="color: #1296db;">{{items.nick}}</text>
+                  <text>：{{items.Content}}</text>
+                </view> 
+                <view wx:else>
+                  <text style="color: #1296db;">{{items.nick}}</text><text>回复</text><text style="color: #1296db;">{{items.toNick}}</text>
+                  <text >：{{items.Content}}</text>
+                </view>
+              </view>
+            </view>
+            <view bindtap='moreComment' data-comment="{{item}}" wx:if="{{item.Childs.length >= 5 }}" style="text-align: center;font-size: 24rpx;color: #1296db;">查看跟多</view>
+          </view> 
+        </view>
+      </view>
+    </view> 
+  </view>
+
+</view>
+  <view class="publishComment"  >
+    <view class="program-comment">
+      <image class="mc" src="../../images/mic_bottom.png" bindtap='showRecord'></image>
+      <input placeholder="说点什么吧" value="{{currcomment}}" type="text" name="comment" confirm-type="send"  bindconfirm='bindFormSubmit' cursor-spacing='24' />
+    </view>
+    <view class="sendPic">
+      <image mode="" src="../../images/pic .png"  bindtap='selectPic'></image>
+    </view>
+  </view>
+  <view class="record {{ showRecord ? 'showRecord' : ''}}">
+    <view style='display: flex;'>
+      <image class="record-slide" src="../../images/slide_up.png"></image>
+      <view class="record-text">上滑取消发送</view>
+    </view>
+    <view class="record-time">{{formatedRecordTime}}</view>
+    <view class="recording" >
+      <image src="../../images/recording.png"  bindtouchstart="recordStart" bindtouchend='recordEnd' bindtouchmove='recordUpEnd'></image>
+    </view>
+    <view class="record-touch" >按住说话</view>
+  </view> 
+
+<!-- 评论弹窗 -->
+
+  <view class="popup-example--bottom zan-popup zan-popup--bottom {{ showBottomPopup ? 'zan-popup--show' : ''}}">
+    <view class="zan-popup__mask" catchtap="toggleBottomPopup"></view>
+    <view class="zan-popup__container"  style="max-height: 720rpx;height: 720rpx;overflow: scroll;">
+      <view style="padding-left: 24rpx;">
+        <view class="passItem">往期节目</view>
+      </view>
+      
+      <view class="zan-btns" style="margin: 0;position: relative;padding-left: 24rpx;" wx:for="{{pastProgramList}}" wx:key="index" data-index="{{item}}" bindtap='tapPastProgram' data-item="{{index}}">
+        <view class="pastProgramList">    
+          <view class="program-content">
+            <view class="program-title">{{item.Title}}</view>
+          </view> 
+          <view class="arrow"></view>
+        </view> 
+      </view>
+    <!-- <template is="zan-loadmore" wx:if="{{!noData}}" data="{{ loading: true }}" />
+    <template is="zan-loadmore" wx:else data="{{ nodata: true }}" /> -->
+    </view>
+  </view>
+
+<!-- 删除评论弹窗 -->
+  <view class="delete-popup delete-popup--bottom {{ showdeletePopup ? 'delete-popup--show' : ''}}">
+    <view class="delete-popup__mask" catchtap="toggledeletePopup"></view>
+    <view class="delete-popup__container"  style="height: 200rpx;">
+      <view bindtap='deleteComment' class="deleteBtn" style="color: #f20;">删除</view>
+      <view class="deleteBtn" bindtap='cancelDelete'>取消</view>
+    </view>
+  </view> 
+
+<!-- 回复评论弹窗 -->
+  <view class="reply-popup reply-popup--bottom {{ showreplyPopup ? 'reply-popup--show' : ''}}">
+    <view class="reply-popup__mask" catchtap="togglereplyPopup"></view>
+    <view class="reply-popup__container {{hidden ? 'hide': ''}}"   style="height: 200rpx;">
+      <view bindtap='replyComment' class="deleteBtn"  confirm-type="send" >回复</view>
+      <view class="deleteBtn" bindtap='cancelReply'>取消</view>
+    </view>
+    <view class="reply-popup__container replay {{hidden ? '' : 'hide'}}" style="padding: 24rpx;width: 702rpx;">
+      <input placeholder="回复什么呢" value="{{replayComment}}" type="text" name="comment" confirm-type="send" class="program-comment" bindconfirm='bindFormReply' cursor-spacing='24' focus="{{focus}}" style="width: 676rpx"  /> 
+    </view>
+  </view>
+  
+

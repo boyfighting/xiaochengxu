@@ -1,0 +1,86 @@
+<!--index.wxml-->
+<import src="/component/loadmore/index.wxml" />
+<!-- 无图片模板 -->
+
+<view>
+  <block>
+    <view class="playList">
+      <view class="slider" wx:for="{{songs}}"  wx:key="{{index}}">
+        <!-- 无图 -->
+        <view class='PublishTime'>{{item.TimeRange}}</view>
+        <view  class="noPhoto" wx:if="{{item.FileType == 0 && item.Images.length == 0}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+          
+          <view>
+            <view class="newsTitle">{{item.Title}}</view>
+            <view class="newsInfo twentyfour">
+              <text class="newsFrom">{{item.startAndEnd}}</text>
+              <text class="newsPubTime">{{item.FolderName}}</text>
+            </view>
+          </view>
+        </view> 
+
+        <!-- 一张图 -->
+        
+        <view class="onePhoto" wx:elif="{{item.FileType == 0 && item.Images.length == 1}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+          <view wx:for="{{item.Images}}" wx:for-item="items" wx:key="{{i}}">
+            <image src="{{items}}" mode='' class="onePhotoPic"></image>
+          </view>
+          <view class="onePhotoLeft">
+            <view class="onePhotoTitle">{{item.Title}}</view>
+              <view class="onePhotoInfo twentyfour">
+                <text class="onePhotoFrom">{{item.startAndEnd}}</text>
+                <text class="onePhotoTime">{{item.FolderName}}</text>
+              </view>
+          </view>
+        </view>   
+
+        <!-- 两张图 -->
+
+        <view class="twoPhoto" wx:elif="{{item.FileType == 0 && item.Images.length == 2}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+          <view class="twoPhotoTitle">{{item.Title}} </view>
+          <view class="twoPhotoPic" wx:for="{{item.Images}}" wx:for-item="items" wx:key = "{{i}}" >
+            <image src="{{items}}"></image>
+          </view>
+          <view class="twoPhotoInfo twentyfour">
+            <text class="twoPhotoFrom">{{item.startAndEnd}}</text>
+            <text class="twoPhotoTime">{{item.FolderName}}</text>
+          </view>
+        </view>  
+
+        <!-- 三张图 -->
+
+        <view class="threePhoto" wx:elif="{{item.FileType == 0 && item.Images.length == 3}}" data-index="{{item}}"  bindtap='clicAudiokDetail'>
+          <view class="twoPhotoTitle">{{item.Title}} </view>
+          <view class="threePhotoPic" wx:for="{{item.Images}}" wx:for-item="items" wx:key = "{{i}}">
+            <image src="{{items}}"></image>
+          </view>
+          <view class="twoPhotoInfo twentyfour">
+            <text class="twoPhotoFrom">{{item.startAndEnd}}</text>
+            <text class="twoPhotoTime">{{item.FolderName}}</text>
+          </view>
+        </view> 
+
+        <!-- 视频 -->
+
+        <view class="indexvideo" bindtap='' wx:elif="{{item.FileType == 4}}" data-index="{{item}}" bindtap='clicAudiokDetail'>
+          <view class="indexvideoTitle">{{item.Title}}</view>
+          <view class="indexvideoPic" style="position: relative">
+            <image  src="{{item.CoverImage}}" mode='aspectFill' style="width:100%;height: 360rpx"></image>
+            <view class="playvideoIcon">
+              <image src="../../images/play_vedio.png"  mode="aspectFit"></image>
+            </view>
+          </view>
+          <view class="indexvideoInfo">
+            <text class="indexvideoFrom">{{item.FolderName}}</text>
+            <text class="indexvideoTime">{{item.TimeRange}}</text>
+          </view>
+          </view>
+        </view>
+    </view>
+  </block>
+  
+  <template is="zan-loadmore" wx:if="{{!noData}}" data="{{ loading: true }}" />
+  <template is="zan-loadmore" wx:else data="{{ nodata: true }}" />
+
+</view>
+
